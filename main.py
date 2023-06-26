@@ -21,50 +21,48 @@ data = pd.read_csv('3states.csv')
 # Check if key is entered
 if key:
     os.environ['OPENAI_API_KEY'] = key
-    try:
-        agent = create_pandas_dataframe_agent(OpenAI(
-            temperature=0.0),data, verbose=True)
 
-        if 'history' not in st.session_state:
-            st.session_state['history'] = []
+    agent = create_pandas_dataframe_agent(OpenAI(
+        temperature=0.0),data, verbose=True)
 
-        # Define Generated and Past Chat Arrays
-        if 'generated' not in st.session_state:
-            st.session_state['generated'] = []
+    if 'history' not in st.session_state:
+        st.session_state['history'] = []
 
-        if 'past' not in st.session_state:
-            st.session_state['past'] = []
+    # Define Generated and Past Chat Arrays
+    if 'generated' not in st.session_state:
+        st.session_state['generated'] = []
 
-        # Accept input from user
-        query = st.text_input("Enter a query:")
+    if 'past' not in st.session_state:
+        st.session_state['past'] = []
 
-        # container for the chat history
-        response_container = st.container()
-        # container for the user's text input
-        container = st.container()
+    # Accept input from user
+    query = st.text_input("Enter a query:")
 
-        # Execute Button Logic
-        if st.button("Execute") and query:
-            with st.spinner('Generating response...'):
-                try:
-                    answer = agent.run(query)
-                    st.session_state['history'].append((query, answer))
+    # container for the chat history
+    response_container = st.container()
+    # container for the user's text input
+    container = st.container()
 
-                    # Store conversation
-                    st.session_state.past.append(query)
-                    st.session_state.generated.append(answer)
+    # Execute Button Logic
+    if st.button("Execute") and query:
+        with st.spinner('Generating response...'):
+            try:
+                answer = agent.run(query)
+                st.session_state['history'].append((query, answer))
 
-
-                    # Display conversation in reverse order
-                    if st.session_state['generated']:
-                        with response_container:
-                            for i in range(len(st.session_state['generated'])):
-                                message(st.session_state["past"][i], is_user=True, key=str(i) + '_user',
-                                        avatar_style="big-smile")
-                                message(st.session_state["generated"][i], key=str(i), avatar_style="thumbs")
+                # Store conversation
+                st.session_state.past.append(query)
+                st.session_state.generated.append(answer)
 
 
-                except Exception as e:
-                    st.error(f"An error occurred: {str(e)}")
-    except:
-        st.error(f"Token Limit Excided")
+                # Display conversation in reverse order
+                if st.session_state['generated']:
+                    with response_container:
+                        for i in range(len(st.session_state['generated'])):
+                            message(st.session_state["past"][i], is_user=True, key=str(i) + '_user',
+                                    avatar_style="big-smile")
+                            message(st.session_state["generated"][i], key=str(i), avatar_style="thumbs")
+
+
+            except Exception as e:
+                st.error(f"An error occurred: {str(e)}")
