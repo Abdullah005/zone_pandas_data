@@ -23,7 +23,7 @@ if key:
     os.environ['OPENAI_API_KEY'] = key
     try:
         agent = create_pandas_dataframe_agent(OpenAI(
-            temperature=0.0),data, verbose=True)
+            temperature=0.3),data, verbose=True)
 
         if 'history' not in st.session_state:
             st.session_state['history'] = []
