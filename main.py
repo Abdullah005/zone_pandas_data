@@ -16,7 +16,7 @@ key = st.sidebar.text_input(
     type="password")
 
  # Read Data as Pandas
-data = pd.read_csv('data/3states.csv')
+data = pd.read_csv('3states.csv')
 
 # Check if key is entered
 if key:
